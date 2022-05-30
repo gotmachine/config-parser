@@ -725,18 +725,18 @@ namespace Kopernicus.ConfigParser
                         case NameSignificance.Type:
                             // Generate the type from the name
                             ConfigNode subnode = null;
-                            string searchPattern = target.FieldName + ":";
+
                             foreach (ConfigNode childNode in node.nodes)
                             {
-                                if (childNode.name.StartsWith(searchPattern))
+                                if (childNode.name.StartsWith(target.FieldName) && childNode.name[target.FieldName.Length] == ':')
                                 {
                                     subnode = childNode;
                                     break;
                                 }
                             }
 
-                            String[] split = subnode.name.Split(':');
-                            Type elementType = NameToTypeCache.GetElementType(split[1], targetType);
+                            string name = subnode.name.Substring(target.FieldName.Length + 1);
+                            Type elementType = NameToTypeCache.GetElementType(name, targetType);
 
                             // If no object was found, check if the type implements custom constructors
                             targetValue = Activator.CreateInstance(elementType);
